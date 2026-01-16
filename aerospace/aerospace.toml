@@ -49,10 +49,11 @@ automatically-unhide-macos-hidden-apps = true
 #
 #
 # Notify Sketchybar about workspace change and update icons
+# Icon update runs in background (&) so it doesn't block workspace switching
 exec-on-workspace-change = [
     '/bin/bash',
     '-c',
-    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE && ~/.config/sketchybar/plugins/update_workspace_icons.sh',
+    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE; ~/.config/sketchybar/plugins/update_workspace_icons.sh &',
 ]
 
 # Possible values: (qwerty|dvorak)
