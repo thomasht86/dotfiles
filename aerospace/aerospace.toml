@@ -110,47 +110,18 @@ outer.left = 5
 # end tell'
 # '''
 
-# App shortcuts
-cmd-shift-b = '''exec-and-forget osascript -e '
-tell application "Google Chrome"
-    make new window
-    activate
-end tell'
-'''
-
+# App shortcuts - using fast `open` instead of slow AppleScript
+cmd-shift-b = 'exec-and-forget open -na "Google Chrome" --args --new-window'
 cmd-shift-c = 'exec-and-forget /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code --new-window'
+cmd-shift-enter = 'exec-and-forget open -na iTerm'
+cmd-shift-s = 'exec-and-forget open -a Slack'
+cmd-shift-a = 'exec-and-forget open -a ChatGPT'
 
-cmd-shift-enter = '''exec-and-forget osascript -e '
-tell application "iTerm"
-    create window with default profile
-    activate
-end tell'
-'''
-
-cmd-shift-s = '''exec-and-forget osascript -e '
-tell application "Slack"
-    activate
-end tell
-osascript -e '
-tell application "System Events"
-    keystroke "n" using {command down, shift down}
-end tell'
-'''
-
-#cmd-d = 'exec-and-forget open -a /Applications/Discord.app'
-#cmd-p = 'exec-and-forget open -a /Applications/Adobe\ Premiere\ Pro\ 2024/Adobe\ Premiere\ Pro\ 2024.app/'
-#cmd-o = 'exec-and-forget open -a /Applications/OBS.app/'
-#cmd-w = 'exec-and-forget open -a /Applications/Obsidian.app'
-#cmd-n = 'exec-and-forget open -a /Applications/Notion.app'
-cmd-shift-a = '''exec-and-forget osascript -e '
-tell application "ChatGPT"
-    activate
-end tell
-osascript -e '
-tell application "System Events"
-    keystroke "n" using command down
-end tell'
-'''
+#cmd-d = 'exec-and-forget open -a Discord'
+#cmd-p = 'exec-and-forget open -a "Adobe Premiere Pro 2024"'
+#cmd-o = 'exec-and-forget open -a OBS'
+#cmd-w = 'exec-and-forget open -a Obsidian'
+#cmd-n = 'exec-and-forget open -a Notion'
 cmd-shift-r = [
     'reload-config',
     'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0',
