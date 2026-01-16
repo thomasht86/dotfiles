@@ -111,6 +111,9 @@ outer.left = 5
 # end tell'
 # '''
 
+# Launcher (like Omarchy's Cmd+K)
+cmd-k = 'exec-and-forget open -a Raycast'
+
 # App shortcuts - using fast `open` instead of slow AppleScript
 cmd-shift-b = 'exec-and-forget open -na "Google Chrome" --args --new-window'
 cmd-shift-c = 'exec-and-forget /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code --new-window'
