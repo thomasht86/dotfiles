@@ -33,6 +33,11 @@ A snappy, Hyprland-inspired tiling window manager setup for macOS using Aerospac
 | `Cmd + Shift + H/J/K/L` | Move window left/down/up/right |
 | `Cmd + +/-` | Resize window |
 
+### Quick Reference
+| Shortcut | Action |
+|----------|--------|
+| `Cmd + K` | Show all keyboard shortcuts |
+
 ### App Launchers
 | Shortcut | Action |
 |----------|--------|
