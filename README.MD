@@ -1,66 +1,171 @@
-# dotfiles
+# macOS Tiling Window Manager Dotfiles
 
-This dotfiles repository provides a modern, productive, and visually appealing development environment for macOS. It brings together:
-
-- [**aerospace**](https://github.com/nikitabobko/AeroSpace) an i3-like tiling window manager for macOS
-- **Sketchybar** (macOS) for a highly customizable status bar, and **Aerospace** for advanced window management.
-- **Zsh** as the main shell, with [Starship](https://starship.rs/) prompt using the [Pastel Powerline preset](https://starship.rs/presets/#pastel-powerline) for a fast, informative, and beautiful command line experience.
-- **Tmux** for terminal multiplexing, session management, and efficient workflows.
-- **Neovim & LazyVim** as a pre-configured, extensible Neovim setup for powerful code editing.
-- **Ghostty** as the terminal emulator (macOS), with custom themes and settings.
-- **Hiddenbar** and **Stats** (macOS) for menu bar and system monitoring enhancements.
-- Sensible defaults, backup and symlink management, and easy setup for new machines.
+A snappy, Hyprland-inspired tiling window manager setup for macOS using Aerospace, Sketchybar, and JankyBorders. Optimized for performance and keyboard-driven workflows.
 
 ![Terminal and status bar setup](docs/screenshot.png)
-*Example: Starship prompt (Pastel Powerline), Ghostty terminal, and Sketchybar on macOS.*
 
-## Getting Started
+## What's Included
 
-### Prerequisite
-The install script backs up existing configuration files, but read below before running it!
-Requirements:
-* git
-* [brew](https://brew.sh/) (on MacOS)
+| Tool | Purpose |
+|------|---------|
+| [Aerospace](https://github.com/nikitabobko/AeroSpace) | i3-like tiling window manager |
+| [Sketchybar](https://github.com/FelixKratz/SketchyBar) | Customizable status bar with workspace icons |
+| [JankyBorders](https://github.com/FelixKratz/JankyBorders) | Window borders for visual focus |
+| [Ghostty](https://ghostty.org/) | Fast terminal emulator |
+| [Starship](https://starship.rs/) | Cross-shell prompt (Pastel Powerline preset) |
+| Zsh + Tmux | Shell and terminal multiplexing |
+| Neovim + LazyVim | Code editing |
+
+## Keyboard Shortcuts
+
+### Workspace Navigation
+| Shortcut | Action |
+|----------|--------|
+| `Cmd + 1-7` | Switch to workspace 1-7 |
+| `Cmd + Tab` | Toggle last workspace |
+| `Cmd + Shift + Tab` | Move workspace to next monitor |
+
+### Window Management
+| Shortcut | Action |
+|----------|--------|
+| `Cmd + Shift + 1-7` | Move window to workspace 1-7 |
+| `Cmd + H/J/K/L` | Focus window left/down/up/right |
+| `Cmd + Shift + H/J/K/L` | Move window left/down/up/right |
+| `Cmd + +/-` | Resize window |
+
+### App Launchers
+| Shortcut | Action |
+|----------|--------|
+| `Cmd + Shift + Enter` | New iTerm window |
+| `Cmd + Shift + B` | New Chrome window |
+| `Cmd + Shift + C` | New VS Code window |
+| `Cmd + Shift + S` | Open Slack |
+| `Cmd + Shift + A` | Open ChatGPT |
+
+### Screenshots (remapped to avoid workspace conflicts)
+| Shortcut | Action |
+|----------|--------|
+| `Cmd + Alt + 3` | Screenshot entire screen to clipboard |
+| `Cmd + Alt + 4` | Selection screenshot to clipboard |
+| `Cmd + Alt + 5` | Interactive screenshot mode |
+
+### Config Management
+| Shortcut | Action |
+|----------|--------|
+| `Cmd + Shift + R` | Reload Aerospace + Sketchybar + Borders |
+| `Cmd + Shift + ;` | Enter service mode (then `r` to reset layout, `f` to toggle float) |
+
+## Performance Optimizations
+
+This setup includes several optimizations for snappy workspace switching:
+
+### 1. Async Icon Updates
+The sketchybar workspace icons update in the background, so they don't block workspace transitions:
+```toml
+# In aerospace.toml
+exec-on-workspace-change = [
+    '/bin/bash', '-c',
+    'sketchybar --trigger ... ; ~/.config/sketchybar/plugins/update_workspace_icons.sh &',
+]
+```
+
+### 2. Targeted Workspace Updates
+Instead of scanning all workspaces on every change, only the current and previous workspace are updated:
+```bash
+# In update_workspace_icons.sh
+if [ -n "$AEROSPACE_FOCUSED_WORKSPACE" ]; then
+    update_space_icons "$AEROSPACE_FOCUSED_WORKSPACE"
+fi
+if [ -n "$AEROSPACE_PREV_WORKSPACE" ]; then
+    update_space_icons "$AEROSPACE_PREV_WORKSPACE"
+fi
+```
+
+### 3. Sourced Icon Mapping
+The icon map function is sourced once instead of spawning a subprocess per app:
+```bash
+source "$CONFIG_DIR/plugins/icon_map_fn.sh"
+icon_map "$app"  # Sets icon_result variable directly
+```
+
+### 4. Fast App Launching
+App shortcuts use `open -na` instead of slow AppleScript:
+```toml
+# Fast
+cmd-shift-enter = 'exec-and-forget open -na iTerm'
+
+# Slow (avoided)
+# cmd-shift-enter = '''exec-and-forget osascript -e 'tell application "iTerm"...'
+```
+
+## macOS Settings for Best Performance
+
+### Required
+Disable **System Settings > Desktop & Dock > Displays have separate Spaces** (requires logout)
+
+This is critical for fast window detection with Aerospace.
+
+### Recommended
+Speed up window animations:
+```bash
+defaults write -g NSWindowResizeTime -float 0.001
+defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
+```
+
+Disable macOS screenshot shortcuts (to free Cmd+Shift+3/4/5 for workspaces):
+```bash
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 28 '<dict><key>enabled</key><false/></dict>'
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 29 '<dict><key>enabled</key><false/></dict>'
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 30 '<dict><key>enabled</key><false/></dict>'
+defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 31 '<dict><key>enabled</key><false/></dict>'
+```
+
+## Installation
+
+### Prerequisites
+- macOS
+- [Homebrew](https://brew.sh/)
+- Git
 
 ### Install
+```bash
+git clone https://github.com/thomasht86/dotfiles ~/.config/dotfiles
+cd ~/.config/dotfiles
+./install.sh              # Core tools, shell, editor
+./install_sketchybar.sh   # Status bar
+./install_aerospace.sh    # Window manager
 ```
-git clone https://github.com/mehd-io/dotfiles ~/.dotfiles
-cd ~/.dotfiles
-./install.sh         # Installs core tools, symlinks configs, sets up Ghostty & Starship, Hiddenbar, Stats, and LazyVim
-./install_sketchybar.sh   # Installs Sketchybar and dependencies, sets up config
-./install_aerospace.sh    # Installs Aerospace and sets up config
+
+### Manual Steps After Install
+1. Disable "Displays have separate Spaces" in System Settings
+2. Log out and back in
+3. Run the animation/screenshot defaults commands above
+
+## File Structure
+
+```
+~/.config/dotfiles/
+├── aerospace/
+│   └── aerospace.toml       # Window manager config (symlinked to ~/.config/aerospace/)
+├── sketchybar/
+│   ├── sketchybarrc         # Status bar config
+│   └── plugins/
+│       ├── update_workspace_icons.sh  # Optimized icon updater
+│       ├── icon_map_fn.sh   # App to icon mapping
+│       └── ...
+├── borders/
+│   └── bordersrc            # Window border config
+├── ghostty/
+├── starship/
+├── tmux/
+└── zsh/
 ```
 
-## What each install script does
+## Inspiration
 
-### install.sh
-- Installs required packages depending on OS (neovim, tmux, tree, wget, zsh, curl, starship, etc.)
-- Symlinks tmux.conf, .zshrc, .zprofile, and other dotfiles
-- Symlinks Ghostty config to ~/.config/ghostty/config
-- Symlinks Starship config (Pastel Powerline preset) to ~/.config/starship.toml
-- Installs Ghostty terminal (MacOS)
-- Installs Hiddenbar and Stats (MacOS)
-- Installs LazyVim (clones https://github.com/LazyVim/starter to ~/.config/nvim, removes .git folder)
-- Sets default shell to zsh
+- [Omarchy](https://github.com/basecamp/omarchy) - Hyprland-based Linux setup from Basecamp
+- [Hyprland](https://hyprland.org/) - The Wayland compositor this setup emulates
 
-### install_sketchybar.sh
-- Installs Sketchybar and its dependencies (sf-symbols, jq, gh)
-- Downloads and installs the Sketchybar app font
-- Backs up existing Sketchybar config and moves new config into place
-- Restarts Sketchybar service
+## Credits
 
-### install_aerospace.sh
-- Installs Aerospace (MacOS window manager)
-- Backs up existing Aerospace config and moves new config into place
-
-## About Aerospace 
-
-I did a video for a deep dive on this tiling window manager, check this here : 
-[![Aerospace Window Manager Deep Dive](https://img.youtube.com/vi/gjR2eiomRwo/0.jpg)](https://www.youtube.com/watch?v=gjR2eiomRwo)
-
-## Starship prompt : Pastel Powerline
-This setup uses [Starship](https://starship.rs/) with the [Pastel Powerline preset](https://starship.rs/presets/#pastel-powerline) for a modern, colorful, and informative shell prompt.
-
-## Tmux
-command key remapped from ctrl+b to ctrl+a
-Using theme from : https://github.com/gpakosz/.tmux
+Originally forked from [mehd-io/dotfiles](https://github.com/mehd-io/dotfiles), heavily modified for performance.
