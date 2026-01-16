@@ -112,13 +112,20 @@ defaults write -g NSWindowResizeTime -float 0.001
 defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
 ```
 
-Disable macOS screenshot shortcuts (to free Cmd+Shift+3/4/5 for workspaces):
-```bash
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 28 '<dict><key>enabled</key><false/></dict>'
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 29 '<dict><key>enabled</key><false/></dict>'
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 30 '<dict><key>enabled</key><false/></dict>'
-defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 31 '<dict><key>enabled</key><false/></dict>'
-```
+### Required: Disable macOS Screenshot Shortcuts
+To free `Cmd+Shift+3/4/5` for workspace management (like Omarchy), you **must** disable macOS screenshot shortcuts via the GUI:
+
+1. Open **System Settings**
+2. Go to **Keyboard → Keyboard Shortcuts**
+3. Click **Screenshots** in the left sidebar
+4. **Uncheck ALL** screenshot shortcuts
+
+> **Note:** Terminal commands (`defaults write`) for this are unreliable. The GUI method works immediately and persists across reboots.
+
+Alternative screenshot shortcuts are configured in aerospace.toml:
+- `Cmd + Alt + 3` → Screenshot entire screen
+- `Cmd + Alt + 4` → Screenshot selection
+- `Cmd + Alt + 5` → Interactive screenshot
 
 ## Installation
 
