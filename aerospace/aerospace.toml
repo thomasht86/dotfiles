@@ -111,8 +111,8 @@ outer.left = 5
 # end tell'
 # '''
 
-# Launcher (like Omarchy's Cmd+K)
-cmd-k = 'exec-and-forget open -a Raycast'
+# Hotkey cheatsheet (like Omarchy's Cmd+K) - uses fast Ghostty
+cmd-k = 'exec-and-forget /Users/thomas/.config/dotfiles/scripts/show-hotkeys-popup.sh'
 
 # App shortcuts - using fast `open` instead of slow AppleScript
 cmd-shift-b = 'exec-and-forget open -na "Google Chrome" --args --new-window'
@@ -251,3 +251,8 @@ cmd-shift-l = ['join-with right', 'mode main']
 5 = 'main'
 6 = 'secondary'
 7 = 'secondary'
+
+# Float the hotkeys cheatsheet window
+[[on-window-detected]]
+if.window-title-regex-substring = 'Hotkeys'
+run = 'layout floating'
