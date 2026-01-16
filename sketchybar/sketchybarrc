@@ -74,7 +74,7 @@ for monitor in $(aerospace list-monitors --format "%{monitor-appkit-nsscreen-scr
 done
 
 # Load Icons on startup for all monitors
-for monitor in $(aerospace list-monitors); do
+for monitor in $(aerospace list-monitors --format "%{monitor-appkit-nsscreen-screens-id}"); do
   for sid in $(aerospace list-workspaces --monitor "$monitor" --empty no); do
     apps=$(aerospace list-windows --workspace "$sid" | awk -F'|' '{gsub(/^ *| *$/, "", $2); print $2}')
 
@@ -124,4 +124,3 @@ sketchybar --add item clock right \
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update
-
